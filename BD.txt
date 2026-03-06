@@ -1,0 +1,231 @@
+CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'rootroot';
+
+-- Dar permisos sobre la base de datos SupplyTrack
+GRANT ALL PRIVILEGES ON SupplyTrack.* TO 'root'@'localhost';
+
+-- Aplicar cambios
+FLUSH PRIVILEGES;
+
+DROP DATABASE IF EXISTS SupplyTrack;
+CREATE DATABASE SupplyTrack;
+USE SupplyTrack;
+
+-- =========================================
+-- TABLA: ROL
+-- =========================================
+CREATE TABLE rol (
+    id_rol INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_rol VARCHAR(100) NOT NULL,
+    nivel_acceso VARCHAR(50) NOT NULL
+);
+
+-- =========================================
+-- TABLA: USUARIO
+-- =========================================
+CREATE TABLE usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    correo VARCHAR(150) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    id_rol INT NOT NULL,
+    CONSTRAINT fk_usuario_rol
+        FOREIGN KEY (id_rol) REFERENCES rol(id_rol)
+);
+
+-- =========================================
+-- TABLA: TIENDA
+-- =========================================
+CREATE TABLE tienda (
+    id_tienda INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    ubicacion VARCHAR(255) NOT NULL
+);
+
+-- =========================================
+-- TABLA: PRODUCTO
+-- =========================================
+CREATE TABLE producto (
+    id_producto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    precio DECIMAL(12,2) NOT NULL,
+    stock_minimo INT NOT NULL DEFAULT 0,
+    stock_maximo INT NOT NULL DEFAULT 0,
+    estado VARCHAR(50) NOT NULL
+);
+
+-- =========================================
+-- TABLA: INVENTARIO
+-- =========================================
+CREATE TABLE inventario (
+    id_inventario INT AUTO_INCREMENT PRIMARY KEY,
+    id_producto INT NOT NULL,
+    id_tienda INT NOT NULL,
+    cantidad INT NOT NULL DEFAULT 0,
+    cantidad_real_minima INT NOT NULL DEFAULT 0,
+    cantidad_real_maxima INT NOT NULL DEFAULT 0,
+    CONSTRAINT fk_inventario_producto
+        FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
+    CONSTRAINT fk_inventario_tienda
+        FOREIGN KEY (id_tienda) REFERENCES tienda(id_tienda),
+    CONSTRAINT uk_inventario_producto_tienda
+        UNIQUE (id_producto, id_tienda)
+);
+
+-- =========================================
+-- TABLA: AJUSTE_INVENTARIO
+-- =========================================
+CREATE TABLE ajuste_inventario (
+    id_ajuste INT AUTO_INCREMENT PRIMARY KEY,
+    id_inventario INT NOT NULL,
+    id_usuario INT NOT NULL,
+    tipo_inout VARCHAR(10) NOT NULL,
+    motivo VARCHAR(255) NOT NULL,
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    cantidad_ajustada INT NOT NULL,
+    CONSTRAINT fk_ajuste_inventario
+        FOREIGN KEY (id_inventario) REFERENCES inventario(id_inventario),
+    CONSTRAINT fk_ajuste_usuario
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT chk_tipo_inout
+        CHECK (tipo_inout IN ('IN', 'OUT'))
+);
+
+-- =========================================
+-- TABLA: TRASLADOS
+-- =========================================
+CREATE TABLE traslados (
+    id_movimiento INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    tipo VARCHAR(50) NOT NULL,
+    nombre VARCHAR(150),
+    id_tienda_origen INT NOT NULL,
+    id_tienda_destino INT NOT NULL,
+    id_usuario INT NOT NULL,
+    CONSTRAINT fk_traslado_tienda_origen
+        FOREIGN KEY (id_tienda_origen) REFERENCES tienda(id_tienda),
+    CONSTRAINT fk_traslado_tienda_destino
+        FOREIGN KEY (id_tienda_destino) REFERENCES tienda(id_tienda),
+    CONSTRAINT fk_traslado_usuario
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+
+-- =========================================
+-- TABLA: EMPRESA_PROVEEDORA
+-- =========================================
+CREATE TABLE empresa_proveedora (
+    id_empresa INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    cedula_juridica VARCHAR(50) NOT NULL UNIQUE,
+    telefono VARCHAR(50),
+    direccion VARCHAR(255)
+);
+
+-- =========================================
+-- TABLA: PROVEEDOR
+-- =========================================
+CREATE TABLE proveedor (
+    id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
+    id_empresa INT NOT NULL,
+    nombre VARCHAR(150) NOT NULL,
+    correo VARCHAR(150),
+    telefono VARCHAR(50),
+    CONSTRAINT fk_proveedor_empresa
+        FOREIGN KEY (id_empresa) REFERENCES empresa_proveedora(id_empresa)
+);
+
+-- =========================================
+-- TABLA: ORDEN_COMPRA
+-- =========================================
+CREATE TABLE orden_compra (
+    id_orden_compra INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    total DECIMAL(14,2) NOT NULL DEFAULT 0,
+    id_tienda INT NOT NULL,
+    id_proveedor INT NOT NULL,
+    CONSTRAINT fk_orden_tienda
+        FOREIGN KEY (id_tienda) REFERENCES tienda(id_tienda),
+    CONSTRAINT fk_orden_proveedor
+        FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+);
+
+-- =========================================
+-- TABLA: DETALLE_ORDEN_COMPRA
+-- =========================================
+CREATE TABLE detalle_orden_compra (
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    id_orden_compra INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(12,2) NOT NULL,
+    subtotal DECIMAL(14,2) GENERATED ALWAYS AS (cantidad * precio_unitario) STORED,
+    CONSTRAINT fk_detalle_orden
+        FOREIGN KEY (id_orden_compra) REFERENCES orden_compra(id_orden_compra),
+    CONSTRAINT fk_detalle_orden_producto
+        FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
+
+-- =========================================
+-- TABLA: RECEPCION
+-- =========================================
+CREATE TABLE recepcion (
+    id_recepcion INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    estado_validacion VARCHAR(50) NOT NULL,
+    id_usuario_registrado INT NOT NULL,
+    id_orden_compra INT NOT NULL,
+    CONSTRAINT fk_recepcion_usuario
+        FOREIGN KEY (id_usuario_registrado) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_recepcion_orden
+        FOREIGN KEY (id_orden_compra) REFERENCES orden_compra(id_orden_compra)
+);
+
+-- =========================================
+-- TABLA: DETALLE_RECEPCION
+-- =========================================
+CREATE TABLE detalle_recepcion (
+    id_detalle_rec INT AUTO_INCREMENT PRIMARY KEY,
+    id_recepcion INT NOT NULL,
+    id_producto INT NOT NULL,
+    id_tienda INT NOT NULL,
+    cantidad_recibida INT NOT NULL,
+    tipo VARCHAR(50),
+    CONSTRAINT fk_detalle_recepcion
+        FOREIGN KEY (id_recepcion) REFERENCES recepcion(id_recepcion),
+    CONSTRAINT fk_detalle_recepcion_producto
+        FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
+    CONSTRAINT fk_detalle_recepcion_tienda
+        FOREIGN KEY (id_tienda) REFERENCES tienda(id_tienda)
+);
+
+-- =========================================
+-- TABLA: FACTURA
+-- =========================================
+CREATE TABLE factura (
+    id_factura INT AUTO_INCREMENT PRIMARY KEY,
+    num_factura VARCHAR(50) NOT NULL UNIQUE,
+    fecha DATE NOT NULL,
+    id_recepcion INT NOT NULL,
+    id_empresa INT NOT NULL,
+    CONSTRAINT fk_factura_recepcion
+        FOREIGN KEY (id_recepcion) REFERENCES recepcion(id_recepcion),
+    CONSTRAINT fk_factura_empresa
+        FOREIGN KEY (id_empresa) REFERENCES empresa_proveedora(id_empresa)
+);
+
+-- =========================================
+-- TABLA: DETALLE_FACTURA
+-- =========================================
+CREATE TABLE detalle_factura (
+    id_detalle_fact INT AUTO_INCREMENT PRIMARY KEY,
+    id_factura INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(12,2) NOT NULL,
+    subtotal DECIMAL(14,2) GENERATED ALWAYS AS (cantidad * precio_unitario) STORED,
+    CONSTRAINT fk_detalle_factura
+        FOREIGN KEY (id_factura) REFERENCES factura(id_factura),
+    CONSTRAINT fk_detalle_factura_producto
+        FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
