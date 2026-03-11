@@ -229,3 +229,5 @@ CREATE TABLE detalle_factura (
     CONSTRAINT fk_detalle_factura_producto
         FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
 );
+
+-- actualización de esquema
