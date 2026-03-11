@@ -42,7 +42,7 @@ public class InventarioService {
 
     @Transactional(readOnly = true)
     public List<Inventario> getInventariosByProducto(Producto producto){
-        return inventarioRepository.findByProducto(producto)
+        return inventarioRepository.findByProducto(producto);
     }
 
     //Lo pongo como optional para evitar errores que puedan generarse.
