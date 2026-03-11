@@ -42,13 +42,48 @@ public class InventarioService {
 
     @Transactional(readOnly = true)
     public List<Inventario> getInventariosByProducto(Producto producto){
-        return inventarioRepository.findByProducto(producto)
+        return inventarioRepository.findByProducto(producto);
     }
 
     //Lo pongo como optional para evitar errores que puedan generarse.
     @Transactional(readOnly = true)
     public Optional<Inventario> getInventariosByProductoAndTienda(Producto producto, Tienda tienda){
         return inventarioRepository.findByProductoAndTienda(producto, tienda);
+    }
+
+    @Transactional
+    public void save(Inventario inventario){
+        if(inventario.getCantidadRealMinima()>inventario.getCantidadRealMaxima()){
+            throw new IllegalArgumentException("La cantidad mínima no puede ser mayor que la máxima.");
+        }
+
+        if(inventario.getCantidad() > inventario.getCantidadRealMaxima()){
+            throw new IllegalArgumentException("La cantidad no puede ser mayor que la cantidad máxima.");
+        }
+
+        Optional<Inventario> existente = inventarioRepository.findByProductoAndTienda(
+                inventario.getProducto(),
+                inventario.getTienda()
+        );
+
+        if(existente.isPresent()){
+            if(inventario.getIdInventario() == null || !existente.get().getIdInventario().equals(inventario.getIdInventario())){
+                throw new IllegalArgumentException("Ya existe un inventario para este producto y tienda.");
+            }
+        }
+        inventarioRepository.save(inventario);
+    }
+
+    @Transactional
+    public void delete(Integer id){
+        if(!inventarioRepository.existsById(id)){
+            throw new IllegalArgumentException("El inventario con ID " + id + " no existe.");
+        }
+        try {
+            inventarioRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar el inventario: " + e.getMessage(), e);
+        }
     }
 
 
