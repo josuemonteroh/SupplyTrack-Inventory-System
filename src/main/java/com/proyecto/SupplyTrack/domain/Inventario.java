@@ -35,14 +35,4 @@ public class Inventario implements Serializable {
     @NotNull
     @Min(0)
     private Integer cantidad = 0;
-
-    @Column(name = "cantidad_real_minima", nullable = false)
-    @NotNull
-    @Min(0)
-    private Integer cantidadRealMinima = 0;
-
-    @Column(name = "cantidad_real_maxima", nullable = false)
-    @NotNull
-    @Min(0)
-    private Integer cantidadRealMaxima = 0;
 }

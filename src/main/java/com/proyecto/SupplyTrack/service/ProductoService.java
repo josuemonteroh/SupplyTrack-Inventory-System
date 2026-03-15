@@ -1,5 +1,6 @@
 package com.proyecto.SupplyTrack.service;
 
+import com.proyecto.SupplyTrack.domain.Categoria;
 import com.proyecto.SupplyTrack.domain.Producto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +23,28 @@ public class ProductoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Producto> listarProductos() {
+        return getProductos();
+    }
+
+    @Transactional(readOnly = true)
     public Optional<Producto> getProducto(Integer id){
         return productoRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Producto obtenerProductoPorId(Integer idProducto) {
+        return getProducto(idProducto).orElse(null);
+    }
+
+    @Transactional
+    public void guardarProducto(Producto producto) {
+        productoRepository.save(producto);
+    }
+
+    @Transactional
+    public void eliminarProducto(Integer idProducto) {
+        productoRepository.deleteById(idProducto);
     }
 
     @Transactional(readOnly = true)
@@ -32,8 +53,18 @@ public class ProductoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Producto> getProductosPorCategoria(String categoria){
+    public List<Producto> listarPorEstado(String estado) {
+        return getProductosPorEstado(estado);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosPorCategoria(Categoria categoria){
         return productoRepository.findByCategoria(categoria);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> listarPorCategoria(Categoria categoria) {
+        return getProductosPorCategoria(categoria);
     }
 
 }

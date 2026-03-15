@@ -34,10 +34,9 @@ public class Producto implements Serializable {
     @Size(max = 150)
     private String nombre;
 
-    @Column(nullable = false, length = 100)
-    @NotBlank
-    @Size(max = 100)
-    private String categoria;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
 
     @Column(nullable = false, precision = 12, scale = 2)
     @NotNull
@@ -59,7 +58,7 @@ public class Producto implements Serializable {
     @Size(max = 50)
     private String estado;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proveedor", nullable = false)
     private Proveedor proveedor;
 }
