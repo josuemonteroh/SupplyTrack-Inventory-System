@@ -12,7 +12,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "producto")
+@Table(name = "producto", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "codigo")
+})
 public class Producto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,6 +23,11 @@ public class Producto implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
     private Integer idProducto;
+
+    @Column(nullable = false, length = 50, unique = true)
+    @NotBlank
+    @Size(max = 50)
+    private String codigo;
 
     @Column(nullable = false, length = 150)
     @NotBlank
@@ -51,4 +58,8 @@ public class Producto implements Serializable {
     @NotBlank
     @Size(max = 50)
     private String estado;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_proveedor", nullable = false)
+    private Proveedor proveedor;
 }
