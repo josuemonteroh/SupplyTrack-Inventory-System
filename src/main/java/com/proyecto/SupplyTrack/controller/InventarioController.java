@@ -48,8 +48,13 @@ public class InventarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@Valid Inventario inventario, RedirectAttributes redirectAttributes) {
+    public String guardar(Inventario inventario, RedirectAttributes redirectAttributes) {
         try{
+            // Cargamos el producto completo para tener acceso a sus stocks en el servicio si es necesario
+            if (inventario.getProducto() != null && inventario.getProducto().getIdProducto() != null) {
+                var prod = productoService.getProducto(inventario.getProducto().getIdProducto());
+                prod.ifPresent(inventario::setProducto);
+            }
             inventarioService.save(inventario);
             redirectAttributes.addFlashAttribute("todoOk", "El inventario fue guardado correctamente.");
         } catch (IllegalArgumentException | IllegalStateException e) {
