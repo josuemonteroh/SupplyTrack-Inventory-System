@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+
+<aside th:replace="~{general/fragmentos :: sidebar}"></aside>
+<header th:replace="~{general/fragmentos :: navbar}"></header>
+
+<main class="main-content">
+    <section th:replace="~{inventario/fragmentos :: agregar}"></section>
+    <section th:replace="~{inventario/fragmentos :: listado}"></section>
+    <div th:replace="~{inventario/fragmentos :: modalEditar}"></div>
+    <div th:replace="~{inventario/fragmentos :: confirmarEliminar}"></div>
+</main>
+
+<section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+<th:block th:replace="~{general/fragmentos :: scripts}"></th:block>
+<th:block th:replace="~{inventario/fragmentos :: scripts}"></th:block>
+
+</body>
+</html>

@@ -1,19 +1,39 @@
 package com.proyecto.SupplyTrack.service;
 
 import com.proyecto.SupplyTrack.domain.Producto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
+import com.proyecto.SupplyTrack.repository.ProductoRepository;
 
-public interface ProductoService {
+@Service
+public class ProductoService {
 
-    public List<Producto> listarProductos();
+    private final ProductoRepository productoRepository;
 
-    public Producto obtenerProductoPorId(Integer idProducto);
+    public ProductoService(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
+    }
 
-    public void guardarProducto(Producto producto);
+    @Transactional(readOnly = true)
+    public List<Producto> getProductos(){
+        return productoRepository.findAll();
+    }
 
-    public void eliminarProducto(Integer idProducto);
+    @Transactional(readOnly = true)
+    public Optional<Producto> getProducto(Integer id){
+        return productoRepository.findById(id);
+    }
 
-    public List<Producto> listarPorEstado(String estado);
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosPorEstado(String estado){
+        return productoRepository.findByEstado(estado);
+    }
 
-    public List<Producto> listarPorCategoria(String categoria);
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosPorCategoria(String categoria){
+        return productoRepository.findByCategoria(categoria);
+    }
+
 }
