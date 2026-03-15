@@ -51,4 +51,9 @@ public class Producto implements Serializable {
     @NotBlank
     @Size(max = 50)
     private String estado;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_proveedor", nullable = false)
+    private Proveedor proveedor;
 }
+
