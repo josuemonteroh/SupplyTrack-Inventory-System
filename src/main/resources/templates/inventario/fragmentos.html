@@ -61,21 +61,6 @@
                                        min="0" required/>
                                 <div class="invalid-feedback">Ingrese una cantidad válida.</div>
                             </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Cantidad mínima <span class="text-danger">*</span></label>
-                                <input type="number" name="cantidadRealMinima" class="form-control"
-                                       min="0" required/>
-                                <div class="invalid-feedback">Ingrese la cantidad mínima.</div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Cantidad máxima <span class="text-danger">*</span></label>
-                                <input type="number" name="cantidadRealMaxima" class="form-control"
-                                       min="0" required/>
-                                <div class="invalid-feedback">Ingrese la cantidad máxima.</div>
-                            </div>
-
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
@@ -113,8 +98,8 @@
                                     <th>Producto</th>
                                     <th>Tienda</th>
                                     <th>Cantidad</th>
-                                    <th>Mínimo</th>
-                                    <th>Máximo</th>
+                                    <th>Mínimo (Prod)</th>
+                                    <th>Máximo (Prod)</th>
                                     <th>Estado</th>
                                     <th class="text-center" style="width:130px;">Acciones</th>
                                 </tr>
@@ -141,14 +126,14 @@
                                             </span>
                                     </td>
                                     <td class="fw-semibold" th:text="${i.cantidad}"></td>
-                                    <td class="text-muted small" th:text="${i.cantidadRealMinima}"></td>
-                                    <td class="text-muted small" th:text="${i.cantidadRealMaxima}"></td>
+                                    <td class="text-muted small" th:text="${i.producto.stockMinimo}"></td>
+                                    <td class="text-muted small" th:text="${i.producto.stockMaximo}"></td>
                                     <td>
-                                            <span th:if="${i.stockCritico}"
+                                            <span th:if="${i.cantidad <= i.producto.stockMinimo}"
                                                   class="badge rounded-pill text-bg-danger">
                                                 Crítico
                                             </span>
-                                        <span th:unless="${i.stockCritico}"
+                                        <span th:unless="${i.cantidad <= i.producto.stockMinimo}"
                                               class="badge rounded-pill text-bg-success">
                                                 Normal
                                             </span>
@@ -162,9 +147,7 @@
                                                 th:data-bs-id="${i.idInventario}"
                                                 th:data-bs-producto="${i.producto.idProducto}"
                                                 th:data-bs-tienda="${i.tienda.idTienda}"
-                                                th:data-bs-cantidad="${i.cantidad}"
-                                                th:data-bs-minima="${i.cantidadRealMinima}"
-                                                th:data-bs-maxima="${i.cantidadRealMaxima}">
+                                                th:data-bs-cantidad="${i.cantidad}">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                         <button type="button"
@@ -254,21 +237,6 @@
                                        class="form-control" min="0" required/>
                                 <div class="invalid-feedback">Ingrese una cantidad válida.</div>
                             </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Cantidad mínima <span class="text-danger">*</span></label>
-                                <input type="number" name="cantidadRealMinima" id="editarCantidadRealMinima"
-                                       class="form-control" min="0" required/>
-                                <div class="invalid-feedback">Ingrese la cantidad mínima.</div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Cantidad máxima <span class="text-danger">*</span></label>
-                                <input type="number" name="cantidadRealMaxima" id="editarCantidadRealMaxima"
-                                       class="form-control" min="0" required/>
-                                <div class="invalid-feedback">Ingrese la cantidad máxima.</div>
-                            </div>
-
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
@@ -330,8 +298,6 @@
                 document.getElementById('editarProducto').value = button.getAttribute('data-bs-producto') || '';
                 document.getElementById('editarTienda').value = button.getAttribute('data-bs-tienda') || '';
                 document.getElementById('editarCantidad').value = button.getAttribute('data-bs-cantidad') || '';
-                document.getElementById('editarCantidadRealMinima').value = button.getAttribute('data-bs-minima') || '';
-                document.getElementById('editarCantidadRealMaxima').value = button.getAttribute('data-bs-maxima') || '';
             });
         }
 

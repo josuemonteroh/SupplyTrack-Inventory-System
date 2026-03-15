@@ -3,10 +3,6 @@
 <head th:replace="~{general/fragmentos :: head}"></head>
 <body>
 
-<!-- ═══════════════════════════════════════
-     FRAGMENTO: agregar
-     Botón + Modal para registrar nuevo proveedor
-════════════════════════════════════════ -->
 <section th:fragment="agregar">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
@@ -37,15 +33,10 @@
                         <div class="row g-3">
 
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Empresa Proveedora <span class="text-danger">*</span></label>
-                                <select name="empresa.idEmpresa" class="form-select" required>
-                                    <option value="" disabled selected>— Seleccione una empresa —</option>
-                                    <option th:each="e : ${empresas}"
-                                            th:value="${e.idEmpresa}"
-                                            th:text="${e.nombre}">
-                                    </option>
-                                </select>
-                                <div class="invalid-feedback">Seleccione una empresa.</div>
+                                <label class="form-label fw-semibold">Empresa <span class="text-danger">*</span></label>
+                                <input type="text" name="empresa" class="form-control" 
+                                       placeholder="Nombre de la empresa" maxlength="150" required/>
+                                <div class="invalid-feedback">Ingrese el nombre de la empresa.</div>
                             </div>
 
                             <div class="col-md-6">
@@ -85,10 +76,6 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════
-     FRAGMENTO: listado
-     Tabla de proveedores + tarjeta de total
-════════════════════════════════════════ -->
 <section th:fragment="listado">
     <div class="row g-3">
 
@@ -130,7 +117,7 @@
                                         <td>
                                             <span class="badge rounded-pill"
                                                   style="background:rgba(78,142,247,.12);color:var(--accent);"
-                                                  th:text="${p.empresa.nombre}">
+                                                  th:text="${p.empresa}">
                                             </span>
                                         </td>
                                         <td class="text-muted small" th:text="${p.correo != null} ? ${p.correo} : '—'"></td>
@@ -146,7 +133,7 @@
                                                     th:data-bs-nombre="${p.nombre}"
                                                     th:data-bs-correo="${p.correo != null ? p.correo : ''}"
                                                     th:data-bs-telefono="${p.telefono != null ? p.telefono : ''}"
-                                                    th:data-bs-empresa="${p.empresa.idEmpresa}">
+                                                    th:data-bs-empresa="${p.empresa}">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                             <!-- Botón Eliminar -->
@@ -191,10 +178,6 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════
-     FRAGMENTO: modalEditar
-     Modal para modificar un proveedor existente
-════════════════════════════════════════ -->
 <div th:fragment="modalEditar"
      class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -213,15 +196,10 @@
                     <div class="row g-3">
 
                         <div class="col-12">
-                            <label class="form-label fw-semibold">Empresa Proveedora <span class="text-danger">*</span></label>
-                            <select id="editarEmpresa" name="empresa.idEmpresa" class="form-select" required>
-                                <option value="" disabled>— Seleccione una empresa —</option>
-                                <option th:each="e : ${empresas}"
-                                        th:value="${e.idEmpresa}"
-                                        th:text="${e.nombre}">
-                                </option>
-                            </select>
-                            <div class="invalid-feedback">Seleccione una empresa.</div>
+                            <label class="form-label fw-semibold">Empresa <span class="text-danger">*</span></label>
+                            <input type="text" id="editarEmpresa" name="empresa" class="form-control"
+                                   placeholder="Nombre de la empresa" maxlength="150" required/>
+                            <div class="invalid-feedback">Ingrese el nombre de la empresa.</div>
                         </div>
 
                         <div class="col-md-6">
@@ -262,10 +240,6 @@
 </div>
 
 
-<!-- ═══════════════════════════════════════
-     FRAGMENTO: confirmarEliminar
-     Modal de confirmación de eliminación
-════════════════════════════════════════ -->
 <div th:fragment="confirmarEliminar"
      class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -300,10 +274,6 @@
 </div>
 
 
-<!-- ═══════════════════════════════════════
-     FRAGMENTO: scripts
-     JS para poblar los modales de editar y eliminar
-════════════════════════════════════════ -->
 <th:block th:fragment="scripts">
     <script>
         // Poblar modal de EDITAR con datos de la fila

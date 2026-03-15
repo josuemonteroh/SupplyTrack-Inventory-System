@@ -3,9 +3,6 @@
     <head th:replace="~{general/fragmentos :: head}"></head>
     <body>
 
-        <!-- ===============================
-             FRAGMENTO: agregar producto
-        ================================ -->
         <section th:fragment="agregar">
 
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -51,7 +48,12 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Categoría</label>
-                                        <input type="text" name="categoria" class="form-control" required>
+                                        <select name="categoria.idCategoria" class="form-select" required>
+                                            <option value="">Seleccione una categoría</option>
+                                            <option th:each="cat : ${categorias}"
+                                                    th:value="${cat.idCategoria}"
+                                                    th:text="${cat.nombre}"></option>
+                                        </select>
                                     </div>
 
                                     <div class="col-md-4">
@@ -77,6 +79,16 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Proveedor</label>
+                                        <select name="proveedor.idProveedor" class="form-select" required>
+                                            <option value="">Seleccione un proveedor</option>
+                                            <option th:each="prov : ${proveedores}"
+                                                    th:value="${prov.idProveedor}"
+                                                    th:text="${prov.nombre}"></option>
+                                        </select>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -93,9 +105,6 @@
         </section>
 
 
-        <!-- ===============================
-             FRAGMENTO: listado productos
-        ================================ -->
         <section th:fragment="listado">
 
             <div class="row g-3">
@@ -127,6 +136,7 @@
                                             <th>Stock Min</th>
                                             <th>Stock Max</th>
                                             <th>Estado</th>
+                                            <th>Proveedor</th>
                                             <th class="text-center">Acciones</th>
                                         </tr>
                                     </thead>
@@ -138,11 +148,12 @@
                                             <td th:text="${p.idProducto}"></td>
                                             <td th:text="${p.codigo}"></td>
                                             <td th:text="${p.nombre}"></td>
-                                            <td th:text="${p.categoria}"></td>
+                                            <td th:text="${p.categoria != null ? p.categoria.nombre : 'S/C'}"></td>
                                             <td th:text="${p.precio}"></td>
                                             <td th:text="${p.stockMinimo}"></td>
                                             <td th:text="${p.stockMaximo}"></td>
                                             <td th:text="${p.estado}"></td>
+                                            <td th:text="${p.proveedor != null ? p.proveedor.nombre : 'S/P'}"></td>
 
                                             <td class="text-center">
 
@@ -151,7 +162,9 @@
                                                         data-bs-target="#modalEditar"
                                                         th:data-bs-id="${p.idProducto}"
                                                         th:data-bs-codigo="${p.codigo}"
-                                                        th:data-bs-nombre="${p.nombre}">
+                                                        th:data-bs-nombre="${p.nombre}"
+                                                        th:data-bs-id-categoria="${p.categoria != null ? p.categoria.idCategoria : ''}"
+                                                        th:data-bs-id-proveedor="${p.proveedor != null ? p.proveedor.idProveedor : ''}">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
 
@@ -200,10 +213,6 @@
         </section>
 
 
-        <!-- ===============================
-             MODAL EDITAR
-        ================================ -->
-
         <div th:fragment="modalEditar" class="modal fade" id="modalEditar">
 
             <div class="modal-dialog">
@@ -230,6 +239,24 @@
                                 <input id="editarNombre" name="nombre" class="form-control">
                             </div>
 
+                            <div class="mb-3">
+                                <label>Categoría</label>
+                                <select id="editarCategoria" name="categoria.idCategoria" class="form-select" required>
+                                    <option th:each="cat : ${categorias}"
+                                            th:value="${cat.idCategoria}"
+                                            th:text="${cat.nombre}"></option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Proveedor</label>
+                                <select id="editarProveedor" name="proveedor.idProveedor" class="form-select" required>
+                                    <option th:each="prov : ${proveedores}"
+                                            th:value="${prov.idProveedor}"
+                                            th:text="${prov.nombre}"></option>
+                                </select>
+                            </div>
+
                         </div>
 
                         <div class="modal-footer">
@@ -244,10 +271,6 @@
         </div>
 
 
-
-        <!-- ===============================
-             MODAL ELIMINAR
-        ================================ -->
 
         <div th:fragment="confirmarEliminar" class="modal fade" id="modalEliminar">
 
@@ -296,6 +319,8 @@
                 document.getElementById('editarId').value = btn.getAttribute('data-bs-id')
                 document.getElementById('editarCodigo').value = btn.getAttribute('data-bs-codigo')
                 document.getElementById('editarNombre').value = btn.getAttribute('data-bs-nombre')
+                document.getElementById('editarCategoria').value = btn.getAttribute('data-bs-id-categoria')
+                document.getElementById('editarProveedor').value = btn.getAttribute('data-bs-id-proveedor')
 
             })
 
