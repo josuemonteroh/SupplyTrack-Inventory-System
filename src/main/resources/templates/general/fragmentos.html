@@ -451,9 +451,14 @@
                     <span>Categorías</span>
                 </a>
 
-                <a th:href="@{/pedido/listado}" th:classappend="${activeMenu == 'pedidos'} ? 'active'" class="sidebar-link">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                    <span>Pedidos</span>
+                <a th:href="@{/inventario/listado}" th:classappend="${activeMenu == 'inventario'} ? 'active'" class="sidebar-link">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span>Inventario</span>
+                </a>
+
+                <a th:href="@{/tienda/listado}" th:classappend="${activeMenu == 'tiendas'} ? 'active'" class="sidebar-link">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Tiendas</span>
                 </a>
 
                 <div class="nav-label">Administración</div>

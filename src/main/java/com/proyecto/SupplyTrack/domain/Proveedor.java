@@ -21,9 +21,11 @@ public class Proveedor implements Serializable {
     @Column(name = "id_proveedor")
     private Integer idProveedor;
 
-    @ManyToOne
-    @JoinColumn(name = "id_empresa", nullable = false)
-    private EmpresaProveedora empresa;
+    @Column(name = "id_empresa", nullable = true)
+    private Integer idEmpresa;
+
+    @Column(name = "empresa", length = 150)
+    private String empresa;
 
     @Column(nullable = false, length = 150)
     @NotBlank

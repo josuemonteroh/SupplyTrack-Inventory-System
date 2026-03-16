@@ -53,12 +53,8 @@ public class InventarioService {
 
     @Transactional
     public void save(Inventario inventario){
-        if(inventario.getCantidadRealMinima()>inventario.getCantidadRealMaxima()){
-            throw new IllegalArgumentException("La cantidad mínima no puede ser mayor que la máxima.");
-        }
-
-        if(inventario.getCantidad() > inventario.getCantidadRealMaxima()){
-            throw new IllegalArgumentException("La cantidad no puede ser mayor que la cantidad máxima.");
+        if(inventario.getProducto() != null && inventario.getCantidad() > inventario.getProducto().getStockMaximo()){
+            throw new IllegalArgumentException("La cantidad no puede ser mayor que el stock máximo permitido para este producto (" + inventario.getProducto().getStockMaximo() + ").");
         }
 
         Optional<Inventario> existente = inventarioRepository.findByProductoAndTienda(

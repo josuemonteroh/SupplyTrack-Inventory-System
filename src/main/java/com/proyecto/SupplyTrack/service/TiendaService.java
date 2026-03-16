@@ -28,4 +28,16 @@ public class TiendaService {
         return tiendaRepository.findById(id);
     }
 
+    @Transactional
+    public void save(Tienda tienda) {
+        tiendaRepository.save(tienda);
+    }
+
+    @Transactional
+    public void delete(Integer idTienda) {
+        if (!tiendaRepository.existsById(idTienda)) {
+            throw new IllegalArgumentException("La tienda no existe.");
+        }
+        tiendaRepository.deleteById(idTienda);
+    }
 }

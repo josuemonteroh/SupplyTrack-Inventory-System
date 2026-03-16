@@ -52,16 +52,16 @@
                             <th>ID Inventario</th>
                             <th>Producto</th>
                             <th>Código</th>
+                            <th>Categoría</th>
                             <th>Tienda</th>
                             <th>Cantidad</th>
-                            <th>Mínimo</th>
-                            <th>Máximo</th>
+                            <th>Límite Stock</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:if="${#lists.isEmpty(inventarios)}">
-                            <td colspan="8" class="text-center text-muted py-4">
+                            <td colspan="7" class="text-center text-muted py-4">
                                 Selecciona una tienda para ver el inventario.
                             </td>
                         </tr>
@@ -70,17 +70,17 @@
                             <td th:text="${i.idInventario}"></td>
                             <td th:text="${i.producto.nombre}"></td>
                             <td th:text="${i.producto.codigo}"></td>
+                            <td th:text="${i.producto.categoria != null ? i.producto.categoria.nombre : 'S/C'}"></td>
                             <td th:text="${i.tienda.nombre}"></td>
                             <td th:text="${i.cantidad}"></td>
-                            <td th:text="${i.cantidadRealMinima}"></td>
-                            <td th:text="${i.cantidadRealMaxima}"></td>
+                            <td th:text="${i.producto.stockMinimo + ' - ' + i.producto.stockMaximo}"></td>
                             <td>
                                 <span class="badge rounded-pill text-bg-danger"
-                                      th:if="${i.cantidad < i.cantidadRealMinima}">
+                                      th:if="${i.cantidad < i.producto.stockMinimo}">
                                     Stock crítico
                                 </span>
                                 <span class="badge rounded-pill text-bg-success"
-                                      th:if="${i.cantidad >= i.cantidadRealMinima}">
+                                      th:if="${i.cantidad >= i.producto.stockMinimo}">
                                     Normal
                                 </span>
                             </td>

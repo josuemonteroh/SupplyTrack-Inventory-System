@@ -1,7 +1,6 @@
 package com.proyecto.SupplyTrack.controller;
 
 import com.proyecto.SupplyTrack.domain.Proveedor;
-import com.proyecto.SupplyTrack.service.EmpresaProveedoraService;
 import com.proyecto.SupplyTrack.service.ProveedorService;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -19,12 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProveedorController {
 
     private final ProveedorService proveedorService;
-    private final EmpresaProveedoraService empresaProveedoraService;
-
-    public ProveedorController(ProveedorService proveedorService,
-                               EmpresaProveedoraService empresaProveedoraService) {
+    
+    public ProveedorController(ProveedorService proveedorService) {
         this.proveedorService = proveedorService;
-        this.empresaProveedoraService = empresaProveedoraService;
     }
 
     @GetMapping("/listado")
@@ -32,7 +28,6 @@ public class ProveedorController {
         var proveedores = proveedorService.getProveedores();
         model.addAttribute("proveedores", proveedores);
         model.addAttribute("totalProveedores", proveedores.size());
-        model.addAttribute("empresas", empresaProveedoraService.getEmpresas());
         model.addAttribute("proveedor", new Proveedor());
         model.addAttribute("pageTitle", "Proveedores");
         model.addAttribute("activeMenu", "proveedores");
@@ -83,7 +78,6 @@ public class ProveedorController {
         }
 
         model.addAttribute("proveedor", proveedorOpt.get());
-        model.addAttribute("empresas", empresaProveedoraService.getEmpresas());
         model.addAttribute("pageTitle", "Modificar Proveedor");
         model.addAttribute("activeMenu", "proveedores");
         return "proveedor/modificar";
