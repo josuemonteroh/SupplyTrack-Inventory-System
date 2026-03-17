@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<main class="main-content">
+
+    <div class="container text-center" style="margin-top:120px;">
+
+        <div class="card shadow border-0 p-5" style="max-width:600px; margin:auto;">
+
+            <div class="mb-4 text-warning">
+                <i class="fa-solid fa-gears fa-3x"></i>
+            </div>
+
+            <h3 class="fw-bold mb-3">
+                Módulo en desarrollo
+            </h3>
+
+            <p class="text-muted mb-4">
+                Estamos trabajando,funcionalidad no disponible hasta próxima entrega.
+            </p>
+
+            <a th:href="@{/}" class="btn btn-primary">
+                Volver al dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>

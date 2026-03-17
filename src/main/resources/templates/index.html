@@ -1,62 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{general/fragmentos :: head}"></head>
-    <body>
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
 
-    <th:block th:replace="~{fragments/header :: header}"></th:block>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
 
-    <main class="main-content">
-        <h4 class="mb-4 fw-bold">Dashboard</h4>
+<main class="main-content">
 
-        <div class="row g-3">
-            <div class="col-sm-6 col-xl-3">
-                <div class="stat-card bg-white">
-                    <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                        <i class="fa-solid fa-handshake"></i>
-                    </div>
-                    <div>
-                        <h6>Proveedores</h6>
-                        <h3>0</h3>
-                    </div>
+    <h4 class="mb-4 fw-bold">Dashboard</h4>
+
+    <div class="row g-3">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card bg-white">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="fa-solid fa-handshake"></i>
                 </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <div class="stat-card bg-white">
-                    <div class="stat-icon bg-success bg-opacity-10 text-success">
-                        <i class="fa-solid fa-box-open"></i>
-                    </div>
-                    <div>
-                        <h6>Productos</h6>
-                        <h3>0</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <div class="stat-card bg-white">
-                    <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                    </div>
-                    <div>
-                        <h6>Pedidos</h6>
-                        <h3>0</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <div class="stat-card bg-white">
-                    <div class="stat-icon bg-danger bg-opacity-10 text-danger">
-                        <i class="fa-solid fa-tags"></i>
-                    </div>
-                    <div>
-                        <h6>Categorías</h6>
-                        <h3>0</h3>
-                    </div>
+                <div>
+                    <h6>Proveedores</h6>
+                    <h3 th:text="${totalProveedores}">0</h3>
                 </div>
             </div>
         </div>
-    </main>
 
-    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card bg-white">
+                <div class="stat-icon bg-success bg-opacity-10 text-success">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div>
+                    <h6>Productos</h6>
+                    <h3 th:text="${totalProductos}">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card bg-white">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <div>
+                    <h6>Pedidos</h6>
+                    <h3 th:text="${totalPedidos}">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card bg-white">
+                <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+                <div>
+                    <h6>Categorías</h6>
+                    <h3 th:text="${totalCategorias}">0</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGO DECORATIVO ABAJO -->
+    <div class="dashboard-logo">
+        <img th:src="@{/img/logo.jpeg}" alt="SupplyTrack">
+    </div>
+
+</main>
+
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
 </body>
 </html>

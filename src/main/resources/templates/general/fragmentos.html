@@ -31,6 +31,18 @@
                 background: #f0f2f5;
                 font-family: 'Segoe UI', sans-serif;
             }
+            
+            /* LOGO EN EL DASHBOARD (marca de agua) */
+            .dashboard-logo{
+                text-align:center;
+                margin-top:70px;
+                opacity:0.17;
+            }
+
+            .dashboard-logo img{
+                width:720px;
+                max-width:90%;
+            }
 
             /* ══════════════════════════════
                NAVBAR
@@ -159,25 +171,26 @@
             .sidebar-brand {
                 display: flex;
                 align-items: center;
-                gap: 0.75rem;
-                padding: 0 1rem;
-                height: var(--navbar-h);
+                justify-content: center;
+                padding: 8px;
+                height: 86px;
                 border-bottom: 1px solid rgba(255,255,255,.07);
                 text-decoration: none;
-                white-space: nowrap;
                 flex-shrink: 0;
+                overflow: hidden;
+                background: #ffffff;
+                width: 100%;
+                box-sizing: border-box;
             }
-            .sidebar-brand i {
-                font-size: 1.4rem;
-                color: var(--accent);
-                min-width: 30px;
-                text-align: center;
-            }
-            .sidebar-brand span {
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: #fff;
-                letter-spacing: .5px;
+
+            .sidebar-logo {
+                max-width: 155px;
+                max-height: 68px;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                display: block;
+                margin: 0 auto;
             }
 
             .sidebar-nav {
@@ -421,8 +434,7 @@
         <aside th:fragment="sidebar" class="sidebar">
 
             <a th:href="@{/}" class="sidebar-brand">
-                <i class="fa-solid fa-truck-fast"></i>
-                <span>SupplyTrack</span>
+                <img th:src="@{/img/logo.jpeg}" alt="SupplyTrack Logo" class="sidebar-logo">
             </a>
 
             <nav class="sidebar-nav">
@@ -463,7 +475,7 @@
 
                 <div class="nav-label">Administración</div>
 
-                <a th:href="@{/usuario/listado}" th:classappend="${activeMenu == 'usuarios'} ? 'active'" class="sidebar-link">
+                <a th:href="@{/en-desarrollo}" class="sidebar-link">
                     <i class="fa-solid fa-users"></i>
                     <span>Usuarios</span>
                 </a>
@@ -508,7 +520,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <a th:href="@{/logout}" class="sidebar-link text-danger">
+                <a th:href="@{/en-desarrollo}" class="sidebar-link text-danger">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Cerrar sesión</span>
                 </a>
@@ -564,7 +576,7 @@
                             </div>
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" th:href="@{/perfil}">
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" th:href="@{/en-desarrollo}">
                                 <i class="fa-solid fa-user fa-fw text-primary"></i> Mi perfil
                             </a>
                         </li>
@@ -575,7 +587,7 @@
                         </li>
                         <li><hr class="dropdown-divider my-1" /></li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" th:href="@{/logout}">
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" th:href="@{/en-desarrollo}">
                                 <i class="fa-solid fa-right-from-bracket fa-fw"></i> Cerrar sesión
                             </a>
                         </li>

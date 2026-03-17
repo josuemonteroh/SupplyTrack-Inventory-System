@@ -3,11 +3,10 @@ package com.proyecto.SupplyTrack.controller;
 import com.proyecto.SupplyTrack.domain.Tienda;
 import com.proyecto.SupplyTrack.service.TiendaService;
 import jakarta.validation.Valid;
-import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +35,13 @@ public class TiendaController {
 
     @PostMapping("/guardar")
     public String guardar(@Valid Tienda tienda,
+                          BindingResult result,
                           RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Complete correctamente los campos de la tienda.");
+            return "redirect:/tienda/listado";
+        }
+
         try {
             tiendaService.save(tienda);
             redirectAttributes.addFlashAttribute("todoOk", "La tienda fue guardada correctamente.");

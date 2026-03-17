@@ -3,13 +3,7 @@ package com.proyecto.SupplyTrack.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Data
-@Getter
-@Setter
 @Entity
 @Table(name = "inventario", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id_producto", "id_tienda"})
@@ -35,4 +29,36 @@ public class Inventario implements Serializable {
     @NotNull
     @Min(0)
     private Integer cantidad = 0;
+
+    public Integer getIdInventario() {
+        return idInventario;
+    }
+
+    public void setIdInventario(Integer idInventario) {
+        this.idInventario = idInventario;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public Tienda getTienda() {
+        return tienda;
+    }
+
+    public void setTienda(Tienda tienda) {
+        this.tienda = tienda;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
 }
