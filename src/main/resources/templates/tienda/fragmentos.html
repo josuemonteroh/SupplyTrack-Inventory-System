@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+
+        <section th:fragment="agregar">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Tiendas</h4>
+                    <p class="text-muted mb-0 small">Gestión de ubicaciones y puntos de venta</p>
+                </div>
+
+                <button class="btn btn-primary d-flex align-items-center gap-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAgregar">
+                    <i class="fa-solid fa-plus"></i> Nueva Tienda
+                </button>
+            </div>
+
+            <div class="modal fade" id="modalAgregar">
+                <div class="modal-dialog">
+                    <div class="modal-content border-0 shadow">
+                        <div class="modal-header" style="background: var(--sidebar-bg);">
+                            <h5 class="modal-title text-white">
+                                <i class="fa-solid fa-store me-2"></i> Nueva Tienda
+                            </h5>
+                            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form th:action="@{/tienda/guardar}" method="post">
+                            <div class="modal-body p-4">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Nombre</label>
+                                    <input type="text" name="nombre" class="form-control" required maxlength="150">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Ubicación</label>
+                                    <input type="text" name="ubicacion" class="form-control" required maxlength="255">
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="listado">
+            <div class="row g-3">
+                <div class="col-xl-9">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            <h6 class="fw-bold mb-0">
+                                <i class="fa-solid fa-list me-2 text-primary"></i>
+                                Listado de Tiendas
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre</th>
+                                            <th>Ubicación</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="t, status : ${tiendas}">
+                                            <td th:text="${status.count}"></td>
+                                            <td th:text="${t.nombre}"></td>
+                                            <td th:text="${t.ubicacion}"></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-outline-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditar"
+                                                        th:data-bs-id="${t.idTienda}"
+                                                        th:data-bs-nombre="${t.nombre}"
+                                                        th:data-bs-ubicacion="${t.ubicacion}">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalEliminar"
+                                                        th:data-bs-id="${t.idTienda}"
+                                                        th:data-bs-nombre="${t.nombre}">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <div class="card border-0 shadow-sm text-center p-3">
+                        <div class="stat-icon mx-auto mb-3 bg-primary bg-opacity-10 text-primary">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Total Tiendas</h6>
+                        <h2 class="fw-bold mb-0" th:text="${totalTiendas}">0</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div th:fragment="modalEditar" class="modal fade" id="modalEditar">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/tienda/guardar}" method="post">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Editar Tienda</h5>
+                            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <input type="hidden" id="editarId" name="idTienda">
+                        <div class="modal-body p-4">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Nombre</label>
+                                <input id="editarNombre" name="nombre" class="form-control" required maxlength="150">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Ubicación</label>
+                                <input id="editarUbicacion" name="ubicacion" class="form-control" required maxlength="255">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-success">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div th:fragment="confirmarEliminar" class="modal fade" id="modalEliminar">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <form th:action="@{/tienda/eliminar}" method="post">
+                        <input type="hidden" id="eliminarId" name="idTienda">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title">Eliminar Tienda</h5>
+                            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center p-4">
+                            <div class="mb-3 text-danger">
+                                <i class="fa-solid fa-triangle-exclamation fa-3x"></i>
+                            </div>
+                            <p class="mb-1">¿Desea eliminar esta tienda?</p>
+                            <h5 id="eliminarNombre" class="fw-bold"></h5>
+                            <p class="text-muted small mt-3">Esta acción no se puede deshacer si tiene registros asociados.</p>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-danger">Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:fragment="scripts">
+            <script>
+                document.getElementById('modalEditar').addEventListener('show.bs.modal', function (e) {
+                    const btn = e.relatedTarget
+                    document.getElementById('editarId').value = btn.getAttribute('data-bs-id')
+                    document.getElementById('editarNombre').value = btn.getAttribute('data-bs-nombre')
+                    document.getElementById('editarUbicacion').value = btn.getAttribute('data-bs-ubicacion')
+                })
+
+                document.getElementById('modalEliminar').addEventListener('show.bs.modal', function (e) {
+                    const btn = e.relatedTarget
+                    document.getElementById('eliminarId').value = btn.getAttribute('data-bs-id')
+                    document.getElementById('eliminarNombre').textContent = btn.getAttribute('data-bs-nombre')
+                })
+            </script>
+        </th:block>
+
+    </body>
+</html>

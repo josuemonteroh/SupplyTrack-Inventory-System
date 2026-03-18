@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="header">
+        <aside th:replace="~{general/fragmentos :: sidebar}"></aside>
+        <header th:replace="~{general/fragmentos :: navbar}"></header>
+    </th:block>
+</body>
+</html>

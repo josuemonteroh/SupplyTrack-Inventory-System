@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<main class="main-content">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Búsqueda de productos</h4>
+            <p class="text-muted mb-0 small">Consulta por nombre o código</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form th:action="@{/consultas/productos}" method="get" class="row g-3">
+                <div class="col-md-10">
+                    <label class="form-label fw-semibold">Nombre o código</label>
+                    <input type="text"
+                           name="termino"
+                           class="form-control"
+                           th:value="${termino}"
+                           placeholder="Ej: Catnip / PROD-0001">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i>Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+            <h6 class="fw-bold mb-0">
+                <i class="fa-solid fa-box-open me-2 text-primary"></i>
+                Resultados
+            </h6>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Proveedor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(productos)}">
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No se encontraron productos.
+                            </td>
+                        </tr>
+
+                        <tr th:each="p : ${productos}">
+                            <td th:text="${p.idProducto}"></td>
+                            <td th:text="${p.codigo}"></td>
+                            <td th:text="${p.nombre}"></td>
+                            <td th:text="${p.categoria != null ? p.categoria.nombre : 'Sin categoría'}"></td>
+                            <td th:text="${p.precio}"></td>
+                            <td>
+                                <span class="badge rounded-pill"
+                                      th:classappend="${p.estado == 'Activo'} ? ' text-bg-success' : ' text-bg-secondary'"
+                                      th:text="${p.estado}"></span>
+                            </td>
+                            <td th:text="${p.proveedor != null ? p.proveedor.nombre : 'Sin proveedor'}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>

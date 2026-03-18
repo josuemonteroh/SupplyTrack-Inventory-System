@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<main class="main-content">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Inventario por tienda</h4>
+            <p class="text-muted mb-0 small">Consulta del stock disponible por sucursal</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form th:action="@{/consultas/inventario-por-tienda}" method="get" class="row g-3">
+                <div class="col-md-10">
+                    <label class="form-label fw-semibold">Tienda</label>
+                    <select name="idTienda" class="form-select" required>
+                        <option value="">Seleccione una tienda</option>
+                        <option th:each="t : ${tiendas}"
+                                th:value="${t.idTienda}"
+                                th:text="${t.nombre + ' - ' + t.ubicacion}"
+                                th:selected="${idTienda != null and idTienda == t.idTienda}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100">
+                        <i class="fa-solid fa-filter me-2"></i>Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+            <h6 class="fw-bold mb-0">
+                <i class="fa-solid fa-warehouse me-2 text-primary"></i>
+                Resultados
+            </h6>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID Inventario</th>
+                            <th>Producto</th>
+                            <th>Código</th>
+                            <th>Categoría</th>
+                            <th>Tienda</th>
+                            <th>Cantidad</th>
+                            <th>Límite Stock</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(inventarios)}">
+                            <td colspan="7" class="text-center text-muted py-4">
+                                Selecciona una tienda para ver el inventario.
+                            </td>
+                        </tr>
+
+                        <tr th:each="i : ${inventarios}">
+                            <td th:text="${i.idInventario}"></td>
+                            <td th:text="${i.producto.nombre}"></td>
+                            <td th:text="${i.producto.codigo}"></td>
+                            <td th:text="${i.producto.categoria != null ? i.producto.categoria.nombre : 'S/C'}"></td>
+                            <td th:text="${i.tienda.nombre}"></td>
+                            <td th:text="${i.cantidad}"></td>
+                            <td th:text="${i.producto.stockMinimo + ' - ' + i.producto.stockMaximo}"></td>
+                            <td>
+                                <span class="badge rounded-pill text-bg-danger"
+                                      th:if="${i.cantidad < i.producto.stockMinimo}">
+                                    Stock crítico
+                                </span>
+                                <span class="badge rounded-pill text-bg-success"
+                                      th:if="${i.cantidad >= i.producto.stockMinimo}">
+                                    Normal
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>

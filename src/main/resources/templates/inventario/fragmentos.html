@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+
+<section th:fragment="agregar">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Inventario</h4>
+            <p class="text-muted mb-0 small">Gestión de stock por producto y tienda</p>
+        </div>
+        <button type="button"
+                class="btn btn-primary d-flex align-items-center gap-2"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAgregar">
+            <i class="fa-solid fa-plus"></i> Nuevo Inventario
+        </button>
+    </div>
+
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header" style="background: var(--sidebar-bg);">
+                    <h5 class="modal-title text-white">
+                        <i class="fa-solid fa-boxes-stacked me-2"></i> Nuevo Inventario
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{/inventario/guardar}" th:object="${inventario}"
+                      method="post" class="was-validated">
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Producto <span class="text-danger">*</span></label>
+                                <select name="producto.idProducto" class="form-select" required>
+                                    <option value="" disabled selected>— Seleccione un producto —</option>
+                                    <option th:each="p : ${productos}"
+                                            th:value="${p.idProducto}"
+                                            th:text="${p.nombre}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione un producto.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tienda <span class="text-danger">*</span></label>
+                                <select name="tienda.idTienda" class="form-select" required>
+                                    <option value="" disabled selected>— Seleccione una tienda —</option>
+                                    <option th:each="t : ${tiendas}"
+                                            th:value="${t.idTienda}"
+                                            th:text="${t.nombre}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione una tienda.</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Cantidad <span class="text-danger">*</span></label>
+                                <input type="number" name="cantidad" class="form-control"
+                                       min="0" required/>
+                                <div class="invalid-feedback">Ingrese una cantidad válida.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section th:fragment="listado">
+    <div class="row g-3">
+
+        <div class="col-xl-9">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="fa-solid fa-list me-2 text-primary"></i> Listado de Inventario
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+
+                    <div th:if="${inventarios != null and !inventarios.empty}">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3" style="width:60px;">#</th>
+                                    <th>Producto</th>
+                                    <th>Tienda</th>
+                                    <th>Ubicación</th>
+                                    <th>Cantidad</th>
+                                    <th>Mínimo (Prod)</th>
+                                    <th>Máximo (Prod)</th>
+                                    <th>Estado</th>
+                                    <th class="text-center" style="width:130px;">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="i : ${inventarios}">
+                                    <td class="ps-3 text-muted small">[[${i.idInventario}]]</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white"
+                                                 style="width:36px;height:36px;background:var(--accent);font-size:.8rem;flex-shrink:0;">
+                                                <i class="fa-solid fa-box"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-semibold" th:text="${i.producto.nombre}"></div>
+                                                <div class="text-muted small" th:text="${i.producto.categoria != null ? i.producto.categoria.nombre : 'S/C'}"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                            <span class="badge rounded-pill"
+                                                  style="background:rgba(78,142,247,.12);color:var(--accent);"
+                                                  th:text="${i.tienda.nombre}">
+                                            </span>
+                                    </td>
+                                    <td>
+                                            <span class="badge rounded-pill"
+                                                  style="background:rgba(78,142,247,.12);color:var(--accent);"
+                                                  th:text="${i.tienda.ubicacion}">}">
+
+                                            </span>
+                                    </td>
+                                    <td class="fw-semibold" th:text="${i.cantidad}"></td>
+                                    <td class="text-muted small" th:text="${i.producto.stockMinimo}"></td>
+                                    <td class="text-muted small" th:text="${i.producto.stockMaximo}"></td>
+                                    <td>
+                                            <span th:if="${i.cantidad <= i.producto.stockMinimo}"
+                                                  class="badge rounded-pill text-bg-danger">
+                                                Crítico
+                                            </span>
+                                        <span th:unless="${i.cantidad <= i.producto.stockMinimo}"
+                                              class="badge rounded-pill text-bg-success">
+                                                Normal
+                                            </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-warning me-1"
+                                                title="Editar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEditar"
+                                                th:data-bs-id="${i.idInventario}"
+                                                th:data-bs-producto="${i.producto.idProducto}"
+                                                th:data-bs-tienda="${i.tienda.idTienda}"
+                                                th:data-bs-cantidad="${i.cantidad}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Eliminar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar"
+                                                th:data-bs-id="${i.idInventario}"
+                                                th:data-bs-producto-nombre="${i.producto.nombre}"
+                                                th:data-bs-tienda-nombre="${i.tienda.nombre}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div th:if="${inventarios == null or inventarios.empty}"
+                         class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-box-open fa-2x mb-3 d-block"></i>
+                        <h6 class="fw-semibold mb-1">No hay inventarios registrados</h6>
+                        <p class="mb-0 small">Agregá un inventario para comenzar a gestionar stock.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <div class="text-muted small mb-2">Resumen</div>
+                    <h3 class="fw-bold mb-1" th:text="${totalInventarios}">0</h3>
+                    <p class="text-muted mb-0">Registros totales de inventario</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div th:fragment="modalEditar">
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header" style="background: var(--sidebar-bg);">
+                    <h5 class="modal-title text-white">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> Editar Inventario
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{/inventario/guardar}" method="post" class="was-validated">
+                    <div class="modal-body p-4">
+                        <input type="hidden" name="idInventario" id="editarIdInventario">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Producto <span class="text-danger">*</span></label>
+                                <select name="producto.idProducto" id="editarProducto" class="form-select" required>
+                                    <option value="" disabled>— Seleccione un producto —</option>
+                                    <option th:each="p : ${productos}"
+                                            th:value="${p.idProducto}"
+                                            th:text="${p.nombre}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione un producto.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tienda <span class="text-danger">*</span></label>
+                                <select name="tienda.idTienda" id="editarTienda" class="form-select" required>
+                                    <option value="" disabled>— Seleccione una tienda —</option>
+                                    <option th:each="t : ${tiendas}"
+                                            th:value="${t.idTienda}"
+                                            th:text="${t.nombre}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione una tienda.</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Cantidad <span class="text-danger">*</span></label>
+                                <input type="number" name="cantidad" id="editarCantidad"
+                                       class="form-control" min="0" required/>
+                                <div class="invalid-feedback">Ingrese una cantidad válida.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-warning text-white">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Actualizar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="confirmarEliminar">
+    <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header" style="background: #dc3545;">
+                    <h5 class="modal-title text-white">
+                        <i class="fa-solid fa-trash me-2"></i> Confirmar eliminación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="mb-2">¿Desea eliminar este inventario?</p>
+                    <div class="small text-muted">
+                        Producto: <span id="eliminarProductoNombre" class="fw-semibold text-dark"></span>
+                    </div>
+                    <div class="small text-muted">
+                        Tienda: <span id="eliminarTiendaNombre" class="fw-semibold text-dark"></span>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <form th:action="@{/inventario/eliminar}" method="post" class="ms-auto d-flex gap-2">
+                        <input type="hidden" name="idInventario" id="eliminarIdInventario">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa-solid fa-trash me-1"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script>
+        const modalEditar = document.getElementById('modalEditar');
+        if (modalEditar) {
+            modalEditar.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                document.getElementById('editarIdInventario').value = button.getAttribute('data-bs-id') || '';
+                document.getElementById('editarProducto').value = button.getAttribute('data-bs-producto') || '';
+                document.getElementById('editarTienda').value = button.getAttribute('data-bs-tienda') || '';
+                document.getElementById('editarCantidad').value = button.getAttribute('data-bs-cantidad') || '';
+            });
+        }
+
+        const modalEliminar = document.getElementById('modalEliminar');
+        if (modalEliminar) {
+            modalEliminar.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                document.getElementById('eliminarIdInventario').value = button.getAttribute('data-bs-id') || '';
+                document.getElementById('eliminarProductoNombre').textContent = button.getAttribute('data-bs-producto-nombre') || '';
+                document.getElementById('eliminarTiendaNombre').textContent = button.getAttribute('data-bs-tienda-nombre') || '';
+            });
+        }
+    </script>
+</th:block>
+
+</body>
+</html>
